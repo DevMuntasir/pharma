@@ -6,7 +6,7 @@
 
 import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { Beaker, Eye, EyeOff, Zap, AlertCircle, LogIn } from 'lucide-react'
+import { Eye, EyeOff, Zap, AlertCircle, LogIn } from 'lucide-react'
 import { useAuthStore, DEMO_CREDENTIALS } from '@/store/useAuthStore'
 
 export function LoginPage() {

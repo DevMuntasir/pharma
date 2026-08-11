@@ -5,7 +5,7 @@
 // ─────────────────────────────────────────────────────────
 
 import { Link, useLocation } from 'react-router-dom'
-import { ChevronLeft, ChevronRight, Beaker, LogOut } from 'lucide-react'
+import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
 import { navGroups } from './navConfig'
 import { useUIStore } from '@/store/useUIStore'
 import { useAuthStore } from '@/store/useAuthStore'
