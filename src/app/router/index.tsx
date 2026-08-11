@@ -1,10 +1,13 @@
 // ─────────────────────────────────────────────────────────
 // ROUTER: Application routes
-// All 35 routes mapped to full analytics feature modules
+// All 35 routes mapped to full analytics feature modules.
+// Protected by authentication + role-based access.
 // ─────────────────────────────────────────────────────────
 
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { AppLayout } from '../layout/AppLayout'
+import { ProtectedRoute } from '@/components/auth/ProtectedRoute'
+import { LoginPage } from '@/features/auth/LoginPage'
 import { DashboardPage } from '@/features/command-center/DashboardPage'
 import {
   MarketOverviewPage,
@@ -60,54 +63,75 @@ import {
 } from '@/features/analytics-studio/AnalyticsStudioPage'
 import { NotFoundPage } from '@/features/placeholder/ComingSoonPage'
 
+// ── Helper: wrap a page in AppLayout + ProtectedRoute ────
+
+function Protected({ children }: { children: React.ReactNode }) {
+  return (
+    <ProtectedRoute>
+      <AppLayout>{children}</AppLayout>
+    </ProtectedRoute>
+  )
+}
+
 export const router = createBrowserRouter([
+  // ── Public ─────────────────────────────────────────────
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+
+  // ── Root redirect ──────────────────────────────────────
   {
     path: '/',
-    element: <AppLayout><DashboardPage /></AppLayout>,
+    element: <Protected><DashboardPage /></Protected>,
   },
   {
     path: '/dashboard',
-    element: <AppLayout><DashboardPage /></AppLayout>,
+    element: <Protected><DashboardPage /></Protected>,
   },
+
   // ── Market ────────────────────────────────────────────
   {
     path: '/market',
-    element: <AppLayout><MarketOverviewPage /></AppLayout>,
+    element: <Protected><MarketOverviewPage /></Protected>,
   },
   {
     path: '/market/explorer',
-    element: <AppLayout><MarketExplorerPage /></AppLayout>,
+    element: <Protected><MarketExplorerPage /></Protected>,
   },
   {
     path: '/market/share',
-    element: <AppLayout><MarketSharePage /></AppLayout>,
+    element: <Protected><MarketSharePage /></Protected>,
   },
   {
     path: '/market/trends',
-    element: <AppLayout><MarketTrendsPage /></AppLayout>,
+    element: <Protected><MarketTrendsPage /></Protected>,
   },
+
   // ── Prescriptions ─────────────────────────────────────
   {
     path: '/prescriptions',
-    element: <AppLayout><PrescriptionAnalyticsPage /></AppLayout>,
+    element: <Protected><PrescriptionAnalyticsPage /></Protected>,
   },
   {
     path: '/prescriptions/disease',
-    element: <AppLayout><DiseaseIntelligencePage /></AppLayout>,
+    element: <Protected><DiseaseIntelligencePage /></Protected>,
   },
   {
     path: '/prescriptions/co-prescription',
-    element: <AppLayout><CoPrescriptionPage /></AppLayout>,
+    element: <Protected><CoPrescriptionPage /></Protected>,
   },
+
   // ── Doctors ───────────────────────────────────────────
   {
     path: '/doctors',
-    element: <AppLayout><DoctorIntelligencePage /></AppLayout>,
+    element: <Protected><DoctorIntelligencePage /></Protected>,
   },
   {
     path: '/doctors/:doctorId',
-    element: <AppLayout><DoctorDetailPage /></AppLayout>,
+    element: <Protected><DoctorDetailPage /></Protected>,
   },
+
   // ── Products ──────────────────────────────────────────
   {
     path: '/products',
@@ -115,55 +139,59 @@ export const router = createBrowserRouter([
   },
   {
     path: '/products/brands',
-    element: <AppLayout><BrandIntelligencePage /></AppLayout>,
+    element: <Protected><BrandIntelligencePage /></Protected>,
   },
   {
     path: '/products/molecules',
-    element: <AppLayout><MoleculeIntelligencePage /></AppLayout>,
+    element: <Protected><MoleculeIntelligencePage /></Protected>,
   },
   {
     path: '/products/lifecycle',
-    element: <AppLayout><ProductLifecyclePage /></AppLayout>,
+    element: <Protected><ProductLifecyclePage /></Protected>,
   },
+
   // ── Territories ───────────────────────────────────────
   {
     path: '/territories',
-    element: <AppLayout><TerritoriesPage /></AppLayout>,
+    element: <Protected><TerritoriesPage /></Protected>,
   },
   {
     path: '/territories/:territoryId',
-    element: <AppLayout><TerritoryDetailPage /></AppLayout>,
+    element: <Protected><TerritoryDetailPage /></Protected>,
   },
   {
     path: '/territories/white-space',
-    element: <AppLayout><WhiteSpacePage /></AppLayout>,
+    element: <Protected><WhiteSpacePage /></Protected>,
   },
+
   // ── Competition ───────────────────────────────────────
   {
     path: '/competition',
-    element: <AppLayout><CompetitionPage /></AppLayout>,
+    element: <Protected><CompetitionPage /></Protected>,
   },
   {
     path: '/competition/share',
-    element: <AppLayout><CompetitionSharePage /></AppLayout>,
+    element: <Protected><CompetitionSharePage /></Protected>,
   },
   {
     path: '/competition/switching',
-    element: <AppLayout><BrandSwitchingPage /></AppLayout>,
+    element: <Protected><BrandSwitchingPage /></Protected>,
   },
+
   // ── Demand ────────────────────────────────────────────
   {
     path: '/demand',
-    element: <AppLayout><DemandAnalyticsPage /></AppLayout>,
+    element: <Protected><DemandAnalyticsPage /></Protected>,
   },
   {
     path: '/demand/seasonality',
-    element: <AppLayout><SeasonalityPage /></AppLayout>,
+    element: <Protected><SeasonalityPage /></Protected>,
   },
   {
     path: '/demand/availability',
-    element: <AppLayout><AvailabilityPage /></AppLayout>,
+    element: <Protected><AvailabilityPage /></Protected>,
   },
+
   // ── Forecast ──────────────────────────────────────────
   {
     path: '/forecast',
@@ -171,56 +199,62 @@ export const router = createBrowserRouter([
   },
   {
     path: '/forecast/demand',
-    element: <AppLayout><DemandForecastPage /></AppLayout>,
+    element: <Protected><DemandForecastPage /></Protected>,
   },
   {
     path: '/forecast/products',
-    element: <AppLayout><ProductForecastPage /></AppLayout>,
+    element: <Protected><ProductForecastPage /></Protected>,
   },
   {
     path: '/forecast/territories',
-    element: <AppLayout><TerritoryForecastPage /></AppLayout>,
+    element: <Protected><TerritoryForecastPage /></Protected>,
   },
+
   // ── Scenarios ─────────────────────────────────────────
   {
     path: '/scenarios',
-    element: <AppLayout><ScenarioSimulatorPage /></AppLayout>,
+    element: <Protected><ScenarioSimulatorPage /></Protected>,
   },
+
   // ── Intelligence ──────────────────────────────────────
   {
     path: '/insights',
-    element: <AppLayout><InsightsFeedPage /></AppLayout>,
+    element: <Protected><InsightsFeedPage /></Protected>,
   },
   {
     path: '/insights/anomalies',
-    element: <AppLayout><AnomaliesPage /></AppLayout>,
+    element: <Protected><AnomaliesPage /></Protected>,
   },
   {
     path: '/insights/alerts',
-    element: <AppLayout><AlertsPage /></AppLayout>,
+    element: <Protected><AlertsPage /></Protected>,
   },
+
   // ── Opportunities ─────────────────────────────────────
   {
     path: '/opportunities',
-    element: <AppLayout><OpportunitiesPage /></AppLayout>,
+    element: <Protected><OpportunitiesPage /></Protected>,
   },
+
   // ── AI ────────────────────────────────────────────────
   {
     path: '/ai',
-    element: <AppLayout><AiCopilotPage /></AppLayout>,
+    element: <Protected><AiCopilotPage /></Protected>,
   },
+
   // ── Tools ─────────────────────────────────────────────
   {
     path: '/analytics-studio',
-    element: <AppLayout><AnalyticsStudioPage /></AppLayout>,
+    element: <Protected><AnalyticsStudioPage /></Protected>,
   },
   {
     path: '/reports',
-    element: <AppLayout><ReportsPage /></AppLayout>,
+    element: <Protected><ReportsPage /></Protected>,
   },
+
   // ── 404 ───────────────────────────────────────────────
   {
     path: '*',
-    element: <AppLayout><NotFoundPage /></AppLayout>,
+    element: <Protected><NotFoundPage /></Protected>,
   },
 ])

@@ -341,3 +341,18 @@ export interface TimeSeriesPoint {
   label: string
   value: number
 }
+
+// ── Authentication & RBAC ────────────────────────────────
+
+export type UserRole = 'national_manager' | 'regional_manager' | 'sales_rep'
+
+export interface AuthUser {
+  id: string
+  name: string
+  email: string
+  role: UserRole
+  roleLabel: string
+  initials: string
+  avatarColor: string
+  territory?: string // for regional_manager and sales_rep
+}

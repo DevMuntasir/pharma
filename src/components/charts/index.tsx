@@ -26,8 +26,9 @@ import { cn, formatNumber } from '@/utils'
 import { EmptyState } from '@/components/feedback'
 
 import { Download } from 'lucide-react'
-import { CHART_COLORS, CHART_STYLES } from './chartConstants'
-export { CHART_COLORS, CHART_STYLES }
+import { CHART_COLORS, getChartStyles } from './chartConstants'
+import { useUIStore } from '@/store/useUIStore'
+export { CHART_COLORS, getChartStyles }
 
 // ── ChartCard wrapper ─────────────────────────────────────
 
@@ -108,17 +109,19 @@ interface CustomTooltipComponentProps {
 }
 
 function CustomTooltip({ active, payload, label, formatter }: CustomTooltipComponentProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
   if (!active || !payload?.length) return null
   return (
-    <div style={CHART_STYLES.tooltip.contentStyle}>
-      <p style={{ ...CHART_STYLES.tooltip.labelStyle, marginBottom: 6 }}>{label}</p>
+    <div style={styles.tooltip.contentStyle}>
+      <p style={{ ...styles.tooltip.labelStyle, marginBottom: 6 }}>{label}</p>
       {payload.map((entry, i) => (
         <div key={i} className="flex items-center gap-2 text-xs">
           <span
             className="w-2 h-2 rounded-full flex-shrink-0"
             style={{ backgroundColor: entry.color }}
           />
-          <span style={CHART_STYLES.tooltip.itemStyle}>
+          <span style={styles.tooltip.itemStyle}>
             {entry.name}: <strong>{formatter && typeof entry.value === 'number' ? formatter(entry.value) : formatNumber(Number(entry.value ?? 0))}</strong>
           </span>
         </div>
@@ -126,7 +129,6 @@ function CustomTooltip({ active, payload, label, formatter }: CustomTooltipCompo
     </div>
   )
 }
-
 
 // ── LineChart wrapper ─────────────────────────────────────
 
@@ -153,17 +155,18 @@ export function LineChart({
   showLegend = true,
   formatter,
 }: LineChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
+  const legendColor = theme === 'light' ? '#334155' : '#8da3bf'
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsLine data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-        {showGrid && <CartesianGrid {...CHART_STYLES.grid} vertical={false} />}
-        <XAxis dataKey={xKey} {...CHART_STYLES.axis} />
-        <YAxis {...CHART_STYLES.axis} width={48} />
+        {showGrid && <CartesianGrid {...styles.grid} vertical={false} />}
+        <XAxis dataKey={xKey} {...styles.axis} />
+        <YAxis {...styles.axis} width={48} />
         <Tooltip content={<CustomTooltip formatter={formatter} />} />
         {showLegend && (
-          <Legend
-            wrapperStyle={{ fontSize: 11, color: '#8da3bf', paddingTop: 12 }}
-          />
+          <Legend wrapperStyle={{ fontSize: 11, color: legendColor, paddingTop: 12 }} />
         )}
         {lines.map((line, i) => (
           <Line
@@ -203,14 +206,17 @@ export function AreaChart({
   stacked = false,
   formatter,
 }: AreaChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
+  const legendColor = theme === 'light' ? '#334155' : '#8da3bf'
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsArea data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-        {showGrid && <CartesianGrid {...CHART_STYLES.grid} vertical={false} />}
-        <XAxis dataKey={xKey} {...CHART_STYLES.axis} />
-        <YAxis {...CHART_STYLES.axis} width={48} />
+        {showGrid && <CartesianGrid {...styles.grid} vertical={false} />}
+        <XAxis dataKey={xKey} {...styles.axis} />
+        <YAxis {...styles.axis} width={48} />
         <Tooltip content={<CustomTooltip formatter={formatter} />} />
-        <Legend wrapperStyle={{ fontSize: 11, color: '#8da3bf', paddingTop: 12 }} />
+        <Legend wrapperStyle={{ fontSize: 11, color: legendColor, paddingTop: 12 }} />
         {areas.map((area, i) => {
           const color = area.color ?? CHART_COLORS[i % CHART_COLORS.length]
           return (
@@ -253,14 +259,17 @@ export function BarChart({
   stacked = false,
   formatter,
 }: BarChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
+  const legendColor = theme === 'light' ? '#334155' : '#8da3bf'
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsBar data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-        {showGrid && <CartesianGrid {...CHART_STYLES.grid} vertical={false} />}
-        <XAxis dataKey={xKey} {...CHART_STYLES.axis} />
-        <YAxis {...CHART_STYLES.axis} width={48} />
+        {showGrid && <CartesianGrid {...styles.grid} vertical={false} />}
+        <XAxis dataKey={xKey} {...styles.axis} />
+        <YAxis {...styles.axis} width={48} />
         <Tooltip content={<CustomTooltip formatter={formatter} />} />
-        <Legend wrapperStyle={{ fontSize: 11, color: '#8da3bf', paddingTop: 12 }} />
+        <Legend wrapperStyle={{ fontSize: 11, color: legendColor, paddingTop: 12 }} />
         {bars.map((bar, i) => (
           <Bar
             key={bar.key}
@@ -290,6 +299,8 @@ export function HorizontalBarChart({
   height = 260,
   formatter,
 }: HorizontalBarChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsBar
@@ -297,9 +308,9 @@ export function HorizontalBarChart({
         layout="vertical"
         margin={{ top: 4, right: 32, left: 8, bottom: 0 }}
       >
-        <CartesianGrid {...CHART_STYLES.grid} horizontal={false} />
-        <XAxis type="number" {...CHART_STYLES.axis} width={48} />
-        <YAxis type="category" dataKey="label" {...CHART_STYLES.axis} width={120} tick={{ ...CHART_STYLES.axis.tick, textAnchor: 'end' }} />
+        <CartesianGrid {...styles.grid} horizontal={false} />
+        <XAxis type="number" {...styles.axis} width={48} />
+        <YAxis type="category" dataKey="label" {...styles.axis} width={120} tick={{ ...styles.axis.tick, textAnchor: 'end' }} />
         <Tooltip content={<CustomTooltip formatter={formatter} />} />
         <Bar dataKey="value" radius={[0, 2, 2, 0]} maxBarSize={24}>
           {data.map((entry, i) => (
@@ -330,6 +341,11 @@ export function DonutChart({
   centerLabel,
   centerValue,
 }: DonutChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
+  const legendColor = theme === 'light' ? '#334155' : '#8da3bf'
+  const centerValueColor = theme === 'light' ? '#0f172a' : '#f0f4f8'
+  const centerLabelColor = theme === 'light' ? '#64748b' : '#4d6480'
   return (
     <ResponsiveContainer width="100%" height={height}>
       <PieChart>
@@ -353,20 +369,20 @@ export function DonutChart({
         </Pie>
         <Tooltip
           formatter={(value) => [formatNumber(Number(value)), '']}
-          contentStyle={CHART_STYLES.tooltip.contentStyle}
-          itemStyle={CHART_STYLES.tooltip.itemStyle}
+          contentStyle={styles.tooltip.contentStyle}
+          itemStyle={styles.tooltip.itemStyle}
         />
         <Legend
           formatter={(value) => (
-            <span style={{ color: '#8da3bf', fontSize: 11 }}>{value}</span>
+            <span style={{ color: legendColor, fontSize: 11 }}>{value}</span>
           )}
         />
         {centerLabel && centerValue && (
           <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
-            <tspan x="50%" dy="-6" fontSize={18} fontWeight={700} fill="#f0f4f8" fontFamily="JetBrains Mono, monospace">
+            <tspan x="50%" dy="-6" fontSize={18} fontWeight={700} fill={centerValueColor} fontFamily="JetBrains Mono, monospace">
               {centerValue}
             </tspan>
-            <tspan x="50%" dy="18" fontSize={10} fill="#4d6480" fontFamily="Inter, sans-serif">
+            <tspan x="50%" dy="18" fontSize={10} fill={centerLabelColor} fontFamily="Inter, sans-serif">
               {centerLabel}
             </tspan>
           </text>
@@ -421,14 +437,17 @@ export function ComposedChart({
   height = 260,
   formatter,
 }: ComposedChartProps) {
+  const { theme } = useUIStore()
+  const styles = getChartStyles(theme)
+  const legendColor = theme === 'light' ? '#334155' : '#8da3bf'
   return (
     <ResponsiveContainer width="100%" height={height}>
       <RechartsComposed data={data} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
-        <CartesianGrid {...CHART_STYLES.grid} vertical={false} />
-        <XAxis dataKey={xKey} {...CHART_STYLES.axis} />
-        <YAxis {...CHART_STYLES.axis} width={48} />
+        <CartesianGrid {...styles.grid} vertical={false} />
+        <XAxis dataKey={xKey} {...styles.axis} />
+        <YAxis {...styles.axis} width={48} />
         <Tooltip content={<CustomTooltip formatter={formatter} />} />
-        <Legend wrapperStyle={{ fontSize: 11, color: '#8da3bf', paddingTop: 12 }} />
+        <Legend wrapperStyle={{ fontSize: 11, color: legendColor, paddingTop: 12 }} />
         {bars.map((bar, i) => (
           <Bar key={bar.key} dataKey={bar.key} name={bar.label} fill={bar.color ?? CHART_COLORS[i % CHART_COLORS.length]} radius={[2, 2, 0, 0]} maxBarSize={40} />
         ))}
