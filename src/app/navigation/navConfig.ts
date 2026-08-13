@@ -62,7 +62,7 @@ export const navGroups: NavGroup[] = [
     roles: ['national_manager', 'regional_manager'],
     items: [
       { label: 'Market Overview',       path: '/market',                      icon: TrendingUp },
-      { label: 'Market Explorer',       path: '/market/explorer',             icon: BarChart3 },
+      // { label: 'Market Explorer',       path: '/market/explorer',             icon: BarChart3 },
       { label: 'Market Share',          path: '/market/share',                icon: PieChart },
       { label: 'Market Trends',         path: '/market/trends',               icon: LineChart },
       { label: 'Prescription Analytics',path: '/prescriptions',               icon: Stethoscope },

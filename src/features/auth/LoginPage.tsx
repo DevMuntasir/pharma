@@ -54,9 +54,7 @@ export function LoginPage() {
         {/* Header */}
         <div style={styles.cardHeader}>
           <div style={styles.logoWrap}>
-            <div style={styles.logoIcon}>
-              {/* <Beaker style={{ width: '22px', height: '22px', color: 'white' }} /> */}
-            </div>
+
             <div>
               <p style={styles.logoTitle}>PHARMA INTELLIGENCE</p>
               <p style={styles.logoSub}>Analytics Operating System</p>
